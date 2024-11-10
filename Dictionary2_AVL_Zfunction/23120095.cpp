@@ -92,8 +92,13 @@ void Balance(Node*& pRoot) {
 int Comparator(string& s1, string& s2) {
     int n1 = s1.size();
     int n2 = s2.size();
-    if (n1 == n2) return 0;
-    return n1 < n2 ? -1 : 1;
+    if(n1 < n2) return -1;
+    if(n1 > n2) return 1;
+    for (int i = 0; i < n1; i++) {
+        if (s1[i] < s2[i]) return -1;
+        else if (s1[i] > s2[i]) return 1;
+    }
+    return 0;
 }
 void Insert(Node*& pRoot, string &key, string &meaning) {
     if(pRoot == NULL) {
@@ -255,12 +260,11 @@ Node* SameKeySizeTree(Node*& root, string& inputKey) {
 void CheckKeys(Node*& node, string& inputKey, vector<string>& suggestions) {
     if (suggestions.size() == MAXSUGGESTION) return;
     if (node == NULL) return;
-    if(node->key.size() < inputKey.size()) return;
-
-    if (CheckKey(inputKey, node->key)) {
-        suggestions.push_back(node->key);
+    if (node->key.size() >= inputKey.size()) {
+        if (CheckKey(inputKey, node->key)) {
+            suggestions.push_back(node->key);
+        }
     }
-
     CheckKeys(node->pLeft,inputKey, suggestions);
     CheckKeys(node->pRight, inputKey, suggestions);
 }
@@ -287,7 +291,7 @@ int main() {
 
     Node* root = createTreeFromArray(arr);
     assert(isAVL(root));
-
+    LNR(root);
 
     //While
     vector<string> suggestions = Suggest(root, inputKey);
